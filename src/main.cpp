@@ -21,8 +21,6 @@ void printSmallestString() {
             cout << z;
         }
     }
-
-    cout << N - (N * (resSale / 100));
 }
 
 int main() {
