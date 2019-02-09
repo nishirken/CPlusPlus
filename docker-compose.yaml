@@ -1,0 +1,9 @@
+version: '3.2'
+services:
+  c_plus:
+    container_name: c_plus
+    image: gcc:8.2.0
+    tty: true
+    volumes:
+      - ./src:/src
+      - ./build:/build
