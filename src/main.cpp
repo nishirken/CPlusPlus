@@ -21,7 +21,6 @@ void printSmallestString() {
             cout << z;
         }
     }
-}
 
 int main() {
     printSmallestString();
