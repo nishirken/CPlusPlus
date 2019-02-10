@@ -2,17 +2,27 @@
 #include <string>
 using namespace std;
 
-int Factorial(int x) {
-    if (x <= 1) {
-        return 1;
+bool IsPalindrom(string xs) {
+    char reversed[xs.length()];
+    int j = 0;
+    for (int i = xs.length() - 1; i >= 0; i--) {
+        reversed[j] = xs[i];
+        j++;
     }
+    return reversed == xs;
+}
 
-    return Factorial(x - 1) * x;
+void printBool(bool x) {
+    if (x) {
+        cout << "true";
+    } else {
+        cout << "false";
+    }
 }
 
 int main() {
-    int x;
-    cin >> x;
-    cout << Factorial(x);
+    string xs;
+    cin >> xs;
+    printBool(IsPalindrom(xs));
     return 0;
 }
