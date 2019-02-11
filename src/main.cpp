@@ -3,30 +3,31 @@
 #include <vector>
 using namespace std;
 
-void Reverse(vector<int>& v) {
-    int j = 0;
-    for (int i = v.size() - 1; i >= v.size() / 2; i--) {
-        if (i == j) {
-            continue;
-        }
-
-        int temp = v[j];
-        v[j] = v[i];
-        v[i] = temp;
-        j++;
+vector<int> Reversed(const vector<int>& v) {
+    vector<int> reversed;
+    for (int i = v.size() - 1; i >= 0; i--) {
+        reversed.push_back(v[i]);
     }
+    return reversed;
 }
 
-void PrintVector(vector<int>& v) {
-    for (auto x : v) {
-        cout << x << ", ";
-    }
-    cout << endl;
-}
+//void PrintVector(const vector<int>& v) {
+//    for (int i = 0; i < v.size(); i++) {
+//        cout << v[i];
+//        if (i != v.size()) {
+//            cout << ' ';
+//        }
+//    }
+//    cout << endl;
+//}
 
 int main() {
-    vector<int> numbers = {1, 5, 3, 4, 2};
-    Reverse(numbers);
-    PrintVector(numbers);
+//    vector<int> numbers = {1, 5, 3, 4, 2};
+//    vector<int> numbers1 = {1, 5, 3, 4, 2, 7};
+//    vector<int> numbers2;
+//    vector<int> reversed = Reversed(numbers);
+//    PrintVector(reversed);
+//    PrintVector(Reversed(numbers1));
+//    PrintVector(Reversed(numbers2));
     return 0;
 }
