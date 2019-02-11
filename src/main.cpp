@@ -3,16 +3,30 @@
 #include <vector>
 using namespace std;
 
-void UpdateIfGreater(int& x, int& y) {
-    if (x > y) {
-        y = x;
+void Reverse(vector<int>& v) {
+    int j = 0;
+    for (int i = v.size() - 1; i >= v.size() / 2; i--) {
+        if (i == j) {
+            continue;
+        }
+
+        int temp = v[j];
+        v[j] = v[i];
+        v[i] = temp;
+        j++;
     }
 }
 
+void PrintVector(vector<int>& v) {
+    for (auto x : v) {
+        cout << x << ", ";
+    }
+    cout << endl;
+}
+
 int main() {
-    int a = 4;
-    int b = 2;
-    UpdateIfGreater(a, b);
-    cout << b;
+    vector<int> numbers = {1, 5, 3, 4, 2};
+    Reverse(numbers);
+    PrintVector(numbers);
     return 0;
 }
