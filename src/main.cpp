@@ -1,33 +1,50 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
+#include <stdlib.h>
+#include "print-vector.h"
 using namespace std;
 
-vector<int> Reversed(const vector<int>& v) {
-    vector<int> reversed;
-    for (int i = v.size() - 1; i >= 0; i--) {
-        reversed.push_back(v[i]);
-    }
-    return reversed;
-}
-
-//void PrintVector(const vector<int>& v) {
-//    for (int i = 0; i < v.size(); i++) {
-//        cout << v[i];
-//        if (i != v.size()) {
-//            cout << ' ';
-//        }
-//    }
-//    cout << endl;
-//}
-
 int main() {
-//    vector<int> numbers = {1, 5, 3, 4, 2};
-//    vector<int> numbers1 = {1, 5, 3, 4, 2, 7};
-//    vector<int> numbers2;
-//    vector<int> reversed = Reversed(numbers);
-//    PrintVector(reversed);
-//    PrintVector(Reversed(numbers1));
-//    PrintVector(Reversed(numbers2));
+    int N;
+    string str;
+
+    cin >> N;
+    double sum = 0;
+
+    vector<int> temperatures(N);
+    vector<string> rawTemp(N);
+    string temp;
+    string::size_type sz;
+    cin >> str;
+
+    for (auto s : str) {
+        if (s != ' ') {
+            temp = "";
+            temp.push_back(s);
+            cout << temp << endl;
+            rawTemp.push_back(temp);
+        }
+    }
+
+    for (int i = 0; i <= N; i++) {
+        temperatures[i] = stoi(rawTemp[i], &sz);
+        sum += temperatures[i];
+    }
+
+    double average = sum / N;
+    int counter = 0;
+    vector<int> highIndexes;
+
+    for (int i = 0; i <= N; i++) {
+        if (temperatures[i] > average) {
+            counter++;
+            highIndexes.push_back(i);
+        }
+    }
+    cout << counter << endl;
+    PrintIntVector(highIndexes);
+
     return 0;
 }
