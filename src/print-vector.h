@@ -12,7 +12,7 @@ void PrintIntVector(const std::vector<int>& v) {
     std::cout << std::endl;
 }
 
-void PrintStringVector(const std::vector<string>& v) {
+void PrintStringVector(const std::vector<std::string>& v) {
     for (int i = 0; i < v.size(); i++) {
         std::cout << v[i];
         if (i != v.size() - 1) {

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "print-vector.h"
+//#include "print-vector.h"
 using namespace std;
 
 const int quietHuman = 1;
@@ -15,6 +15,10 @@ void push(int elementsCount) {
 }
 
 void pop(int elementsCount) {
+    if (elementsCount > queue.size()) {
+        elementsCount = queue.size();
+    }
+
     while(elementsCount--) {
         queue.pop_back();
     }
@@ -49,12 +53,20 @@ int worryCount() {
 void executeCommand(string command) {
     int num;
     string temp;
+    string temp1;
 
     if (command == "WORRY_COUNT") {
         cout << worryCount() << endl;
     } else {
         temp = command[command.length() - 1];
+        temp1 = command[command.length() - 2];
         num = (int)temp[0] - 48;
+        command.pop_back();
+        command.pop_back();
+        if (temp1 != " ") {
+            command.pop_back();
+            num -= num * 2;
+        }
         if (command == "COME") {
             if (num > 0) {
                 push(num);
@@ -73,19 +85,19 @@ int main() {
     int Q;
     cin >> Q;
     vector<string> commands(Q);
-
+    string s;
+    getline(cin, s);
     if (Q == 0) {
         return 0;
     }
 
-    for (int i = 1; i < Q; i++) {
-        getline(cin, commands[i]);
+    for (string& c : commands) {
+        getline(cin, c);
     }
-    PrintStringVector(commands);
 
-//    for (auto command : commands) {
-//        executeCommand(command);
-//    }
+    for (auto command : commands) {
+        executeCommand(command);
+    }
 
     return 0;
 }
