@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-//#include "print-vector.h"
+#include <algorithm>
+// #include "print-vector.h"
 using namespace std;
 
 const int quietHuman = 1;
@@ -50,32 +51,49 @@ int worryCount() {
     return temp;
 }
 
+int getNumber(string inputStr) {
+    string temp;
+    int i = inputStr.length() - 1;
+
+    for (i; inputStr[i] != ' '; i--) {
+        temp.push_back(inputStr[i]);
+    }
+    reverse(temp.begin(), temp.end());
+
+    return stoi(temp);
+}
+
+string getCommand(string inputStr) {
+    string temp;
+    for (char c : inputStr) {
+        if (c == ' ') {
+            return temp;
+        } else {
+            temp.push_back(c);
+        }
+    }
+    return temp;
+}
+
 void executeCommand(string command) {
     int num;
-    string temp;
-    string temp1;
+    string cmd;
 
     if (command == "WORRY_COUNT") {
         cout << worryCount() << endl;
     } else {
-        temp = command[command.length() - 1];
-        temp1 = command[command.length() - 2];
-        num = (int)temp[0] - 48;
-        command.pop_back();
-        command.pop_back();
-        if (temp1 != " ") {
-            command.pop_back();
-            num -= num * 2;
-        }
-        if (command == "COME") {
+        num = getNumber(command);
+        cmd = getCommand(command);
+
+        if (cmd == "COME") {
             if (num > 0) {
                 push(num);
             } else {
                 pop(-num);
             }
-        } else if (command == "WORRY") {
+        } else if (cmd == "WORRY") {
             markWorry(num);
-        } else if (command == "QUIET") {
+        } else if (cmd == "QUIET") {
             markQuiet(num);
         }
     }
