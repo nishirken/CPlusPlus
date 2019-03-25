@@ -6,59 +6,13 @@
 // #include "print-vector.h"
 using namespace std;
 
-const vector<int> daysInMonths = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-int currentMonth = 0;
-map<int, vector<string>> dayTasks;
-
-void add(int day, string task) {
-    if (dayTasks.count(day)) {
-        dayTasks[day].push_back(task);
+string isAnagram(string first, string second) {
+    sort(first.begin(), first.end());
+    sort(second.begin(), second.end());
+    if (first == second) {
+        return "YES";
     } else {
-        dayTasks.insert(pair<int, vector<string>>(day, {task}));
-    }
-}
-
-string getTasks(int day) {
-    vector<string> tasksInDay = dayTasks[day];
-    string res;
-    for (string task : tasksInDay) {
-        res += task + " ";
-    }
-    
-    if (res.length() > 0) {
-        res.pop_back();
-    }
-
-    return to_string(tasksInDay.size()) + " " + res;
-}
-
-void next() {
-    int daysInPrevMonth = daysInMonths[currentMonth];
-
-    if (currentMonth == 11) {
-        currentMonth = 0;
-    } else {
-        currentMonth++;
-    }
-    int daysInCurrentMonth = daysInMonths[currentMonth];
-
-    if (daysInCurrentMonth < daysInPrevMonth) {
-        for (int i = daysInCurrentMonth + 1; i <= daysInPrevMonth; i++) {
-            if (dayTasks.count(i)) {
-                if (!dayTasks.count(daysInCurrentMonth)) {
-                    dayTasks[daysInCurrentMonth] = dayTasks[i];
-                    dayTasks.erase(i);
-                    continue;
-                }
-
-                dayTasks[daysInCurrentMonth].insert(
-                    dayTasks[daysInCurrentMonth].end(),
-                    dayTasks[i].begin(),
-                    dayTasks[i].end()
-                );
-                dayTasks.erase(i);
-            }
-        }
+        return "NO";
     }
 }
 
@@ -98,21 +52,9 @@ string getCommand(string inputStr) {
 }
 
 void executeCommand(string command) {
-    string cmd;
-    string task;
-    vector<string> tasks;
-    int number;
-
-    if (command == "NEXT") {
-        next();
-    } else {
-        cmd = getCommand(command);
-        if (cmd == "DUMP") {
-            cout << getTasks(getNumber(command)) << endl;
-        } else if (cmd == "ADD") {
-            add(getNumber(dropLast(command)), getLast(command));
-        }
-    }
+    string first = dropLast(command);
+    string second = getLast(command);
+    cout << isAnagram(first, second) << endl;
 }
 
 int main() {
