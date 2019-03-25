@@ -2,56 +2,67 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <map>
 // #include "print-vector.h"
 using namespace std;
 
-const int quietHuman = 1;
-const int worryHuman = 0;
-vector<int> queue;
+const vector<int> daysInMonths = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+int currentMonth = 0;
+map<int, vector<string>> dayTasks;
 
-void push(int elementsCount) {
-    while(elementsCount--) {
-        queue.push_back(quietHuman);
+void add(int day, string task) {
+    if (dayTasks.count(day)) {
+        dayTasks[day].push_back(task);
+    } else {
+        dayTasks.insert(pair<int, vector<string>>(day, {task}));
     }
 }
 
-void pop(int elementsCount) {
-    if (elementsCount > queue.size()) {
-        elementsCount = queue.size();
+string getTasks(int day) {
+    vector<string> tasksInDay = dayTasks[day];
+    string res;
+    for (string task : tasksInDay) {
+        res += task + " ";
+    }
+    
+    if (res.length() > 0) {
+        res.pop_back();
     }
 
-    while(elementsCount--) {
-        queue.pop_back();
-    }
+    return to_string(tasksInDay.size()) + " " + res;
 }
 
-void markWorry(int index) {
-    for (int i = 0; i <= queue.size(); i++) {
-        if (i == index) {
-            queue[i] = worryHuman;
+void next() {
+    int daysInPrevMonth = daysInMonths[currentMonth];
+
+    if (currentMonth == 11) {
+        currentMonth = 0;
+    } else {
+        currentMonth++;
+    }
+    int daysInCurrentMonth = daysInMonths[currentMonth];
+
+    if (daysInCurrentMonth < daysInPrevMonth) {
+        for (int i = daysInCurrentMonth + 1; i <= daysInPrevMonth; i++) {
+            if (dayTasks.count(i)) {
+                if (!dayTasks.count(daysInCurrentMonth)) {
+                    dayTasks[daysInCurrentMonth] = dayTasks[i];
+                    dayTasks.erase(i);
+                    continue;
+                }
+
+                dayTasks[daysInCurrentMonth].insert(
+                    dayTasks[daysInCurrentMonth].end(),
+                    dayTasks[i].begin(),
+                    dayTasks[i].end()
+                );
+                dayTasks.erase(i);
+            }
         }
     }
 }
 
-void markQuiet(int index) {
-    for (int i = 0; i <= queue.size(); i++) {
-        if (i == index) {
-            queue[i] = quietHuman;
-        }
-    }
-}
-
-int worryCount() {
-    int temp = 0;
-    for (int human : queue) {
-        if (human == worryHuman) {
-            temp++;
-        }
-    }
-    return temp;
-}
-
-int getNumber(string inputStr) {
+string getLast(string inputStr) {
     string temp;
     int i = inputStr.length() - 1;
 
@@ -59,8 +70,19 @@ int getNumber(string inputStr) {
         temp.push_back(inputStr[i]);
     }
     reverse(temp.begin(), temp.end());
+    return temp;
+}
 
-    return stoi(temp);
+string dropLast(string inputStr) {
+    int i = inputStr.length();
+    while (inputStr[i] != ' ') {
+        i--;
+    }
+    return inputStr.substr(0, i);
+}
+
+int getNumber(string inputStr) {
+    return stoi(getLast(inputStr));
 }
 
 string getCommand(string inputStr) {
@@ -76,25 +98,19 @@ string getCommand(string inputStr) {
 }
 
 void executeCommand(string command) {
-    int num;
     string cmd;
+    string task;
+    vector<string> tasks;
+    int number;
 
-    if (command == "WORRY_COUNT") {
-        cout << worryCount() << endl;
+    if (command == "NEXT") {
+        next();
     } else {
-        num = getNumber(command);
         cmd = getCommand(command);
-
-        if (cmd == "COME") {
-            if (num > 0) {
-                push(num);
-            } else {
-                pop(-num);
-            }
-        } else if (cmd == "WORRY") {
-            markWorry(num);
-        } else if (cmd == "QUIET") {
-            markQuiet(num);
+        if (cmd == "DUMP") {
+            cout << getTasks(getNumber(command)) << endl;
+        } else if (cmd == "ADD") {
+            add(getNumber(dropLast(command)), getLast(command));
         }
     }
 }
