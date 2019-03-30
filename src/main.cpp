@@ -22,31 +22,44 @@ vector<string> split(const string& str, const char& delim) {
     return acc;
 }
 
-set<string> strs;
-
-void executeCommand(string command) {
-    strs.insert(command);
+set<string> BuildMapValuesSet(const map<int, string>& m) {
+    set<string> temp;
+    for (auto const& x : m) {
+        temp.insert(x.second);
+    }
+    return temp;
 }
 
-int main() {
-    int Q;
-    cin >> Q;
-    vector<string> commands(Q);
-    string s;
-    getline(cin, s);
-    if (Q == 0) {
-        return 0;
-    }
+// void executeCommand(string command) {
+//     set<string> values = BuildMapValuesSet({
+//         {1, "odd"},
+//         {2, "even"},
+//         {3, "odd"},
+//         {4, "even"},
+//         {5, "odd"}
+//     });
+//     for (const string& value : values) {
+//         cout << value << endl;
+//     }
+// }
 
-    for (string& c : commands) {
-        getline(cin, c);
-    }
+// int main() {
+//     int Q;
+//     cin >> Q;
+//     vector<string> commands(Q);
+//     string s;
+//     getline(cin, s);
+//     if (Q == 0) {
+//         return 0;
+//     }
 
-    for (auto command : commands) {
-        executeCommand(command);
-    }
+//     for (string& c : commands) {
+//         getline(cin, c);
+//     }
 
-    cout << strs.size() << endl;
+//     for (auto command : commands) {
+//         executeCommand(command);
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
