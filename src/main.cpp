@@ -3,10 +3,9 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <set>
 // #include "print-vector.h"
 using namespace std;
-
-map<vector<string>, int> busesMap;
 
 vector<string> split(const string& str, const char& delim) {
     vector<string> acc;
@@ -23,21 +22,10 @@ vector<string> split(const string& str, const char& delim) {
     return acc;
 }
 
-void executeCommand(string command) {
-    vector<string> input = split(command, ' ');
-    int stopsCount = stoi(input[0]);
-    vector<string> stops;
+set<string> strs;
 
-    for (int i = 1; i != stopsCount + 1; i++) {
-        stops.push_back(input[i]);
-    }
-    if (busesMap.count(stops)) {
-        cout << "Already exists for " << busesMap[stops] << endl;
-    } else {
-        int maxCurrentBusNumber = busesMap.size();
-        busesMap[stops] = maxCurrentBusNumber + 1;
-        cout << "New bus " << busesMap[stops] << endl;
-    }
+void executeCommand(string command) {
+    strs.insert(command);
 }
 
 int main() {
@@ -57,6 +45,8 @@ int main() {
     for (auto command : commands) {
         executeCommand(command);
     }
+
+    cout << strs.size() << endl;
 
     return 0;
 }
