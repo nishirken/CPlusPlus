@@ -6,106 +6,112 @@
 // #include "print-vector.h"
 using namespace std;
 
-map<string, string> capitals;
+map<string, vector<string>> busesMap;
+map<string, vector<string>> stopsMap;
 
-string changeCapital(string country, string newCapital) {
-    string res;
-    if (capitals.count(country)) {
-        if (capitals[country] == newCapital) {
-            res = "Country " + country + " hasn't changed its capital";
-        } else {
-            res = "Country " + country +
-                " has changed its capital from " + capitals[country] + " to " + newCapital;
+vector<string> split(const string& str, const char& delim) {
+    vector<string> acc;
+    string temp;
+    for (const char& c : str) {
+        if (c == delim) {
+            acc.push_back(temp);
+            temp = "";
+            continue;
         }
-    } else {
-        res = "Introduce new country " + country + " with capital " + newCapital;
+        temp.push_back(c);
     }
-    capitals[country] = newCapital;
-    return res;
+    acc.push_back(temp);
+    return acc;
 }
 
-string rename(string oldCountryName, string newCountryName) {
-    if (oldCountryName == newCountryName || !capitals.count(oldCountryName) || capitals.count(newCountryName)) {
-        return "Incorrect rename, skip";
-    } else {
-        capitals[newCountryName] = capitals[oldCountryName];
-        capitals.erase(oldCountryName);
-        return "Country " + oldCountryName +
-            " with capital " + capitals[newCountryName] + " has been renamed to " + newCountryName;
-    }
-}
-
-string about(string country) {
-    if (capitals.count(country)) {
-        return "Country " + country + " has capital " + capitals[country];
-    } else {
-        return "Country " + country + " doesn't exist";
+void newBus(const string& bus, const vector<string>& stops) {
+    busesMap[bus] = stops;
+    for (const auto& stop : stops) {
+        if (stopsMap.count(stop)) {
+            for (auto const& b : stopsMap[stop]) {
+                if (b == bus) {
+                    return;
+                }
+            }
+            stopsMap[stop].push_back(bus);
+        } else {
+            stopsMap[stop] = {bus};
+        }
     }
 }
 
-string dump() {
-    if (capitals.empty()) {
-        return "There are no countries in the world";
+string busesForStop(const string& stop) {
+    if (!stopsMap.count(stop)) {
+        return "No stop";
+    }
+
+    string temp;
+    for (auto const& bus : stopsMap[stop]) {
+            temp += (bus + " ");
+        }
+    temp.pop_back();
+    return temp;
+}
+
+string stopsForBus(const string& bus) {
+    if (!busesMap.count(bus)) {
+        return "No bus";
     } else {
         string temp;
-        for (auto const& x : capitals) {
-            temp += (x.first + "/" + x.second + " ");
+        for (auto const& stop : busesMap[bus]) {
+            string stopStr = "Stop " + stop + ": ";
+            int i = 0;
+            for (auto const& busForStop : stopsMap[stop]) {
+                if (busForStop != bus) {
+                    i++;
+                    stopStr += (busForStop + " ");
+                }
+            }
+            if (i == 0) {
+                stopStr += "no interchange";
+            } else {
+                stopStr.pop_back();
+            }
+            temp += (stopStr + "\n");
         }
         temp.pop_back();
         return temp;
     }
 }
 
-string getLast(string inputStr) {
-    string temp;
-    int i = inputStr.length() - 1;
-
-    for (i; inputStr[i] != ' '; i--) {
-        temp.push_back(inputStr[i]);
-    }
-    reverse(temp.begin(), temp.end());
-    return temp;
-}
-
-string dropLast(string inputStr) {
-    int i = inputStr.length();
-    while (inputStr[i] != ' ') {
-        i--;
-    }
-    return inputStr.substr(0, i);
-}
-
-int getNumber(string inputStr) {
-    return stoi(getLast(inputStr));
-}
-
-string getCommand(string inputStr) {
-    string temp;
-    for (char c : inputStr) {
-        if (c == ' ') {
-            return temp;
-        } else {
-            temp.push_back(c);
+string allBuses() {
+    if (busesMap.empty()) {
+        return "No buses";
+    } else {
+        string temp;
+        for (auto const& bus : busesMap) {
+            temp += ("Bus " + bus.first + ": ");
+            for (auto const& stop : bus.second) {
+                temp += (stop + " ");
+            }
+            temp[temp.length() - 1] = '\n';
         }
+        temp.pop_back();
+        return temp;
     }
-    return temp;
 }
 
 void executeCommand(string command) {
-    string cmd = getCommand(command);
-    if (cmd == "CHANGE_CAPITAL") {
-        string capital = getLast(command);
-        string country = getLast(dropLast(command));
-        cout << changeCapital(country, capital) << endl;
-    } else if (cmd == "RENAME") {
-        string newCountryName = getLast(command);
-        string oldCountryName = getLast(dropLast(command));
-        cout << rename(oldCountryName, newCountryName) << endl;
-    } else if (cmd == "ABOUT") {
-        string country = getLast(command);
-        cout << about(country) << endl;
-    } else if (cmd == "DUMP") {
-        cout << dump() << endl;
+    vector<string> input = split(command, ' ');
+    string cmd = input[0];
+    if (cmd == "NEW_BUS") {
+        int stopsCount = stoi(input[2]);
+        vector<string> stops;
+        for (int i = 0; i != stopsCount; i++) {
+            stops.push_back(input[i + 3]);
+        }
+        newBus(input[1], stops);
+    } else if (cmd == "BUSES_FOR_STOP") {
+        cout << busesForStop(input[1]) << endl;
+    } else if (cmd == "STOPS_FOR_BUS") {
+        cout << stopsForBus(input[1]) << endl;
+    } else if (cmd == "ALL_BUSES") {
+        cout << allBuses() << endl;
     }
 }
 

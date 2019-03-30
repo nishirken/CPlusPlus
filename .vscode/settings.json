@@ -4,6 +4,8 @@
     "string": "cpp",
     "ostream": "cpp",
     "utility": "cpp",
-    "iosfwd": "cpp"
+    "iosfwd": "cpp",
+    "map": "cpp",
+    "iostream": "cpp"
   }
 }
