@@ -22,52 +22,18 @@ vector<string> split(const string& str, const char& delim) {
     return acc;
 }
 
-map<string, set<string>> synonims;
-
-void add(const string& word1, const string& word2) {
-    if (synonims.count(word1)) {
-        synonims[word1].insert(word2);
-    } else {
-        set<string> temp;
-        temp.insert(word2);
-        synonims[word1] = temp;
-    }
-    if (synonims.count(word2)) {
-        synonims[word2].insert(word1);
-    } else {
-        set<string> temp;
-        temp.insert(word1);
-        synonims[word2] = temp;
-    }
-}
-
-int count(const string& word) {
-    if (synonims.count(word)) {
-        return synonims[word].size();
-    }
-    return 0;
-}
-
-string check(const string& word1, const string& word2) {
-    if (
-        (synonims.count(word1) && synonims[word1].count(word2)) ||
-        (synonims.count(word2) && synonims[word2].count(word1))
-    ) {
-        return "YES";
-    }
-    return "NO";
-}
+map<set<string>, string> stopsBusMap;
 
 void executeCommand(string command) {
     vector<string> input = split(command, ' ');
-    string cmd = input[0];
+    string busNumber = input[0];
+    set<string> stops = set<string>(input.begin() + 1, input.end());
 
-    if (cmd == "ADD") {
-        add(input[1], input[2]);
-    } else if (cmd == "COUNT") {
-        cout << count(input[1]) << endl;
-    } else if (cmd == "CHECK") {
-        cout << check(input[1], input[2]) << endl;
+    if (!stopsBusMap.count(stops)) {
+        stopsBusMap[stops] = to_string(stopsBusMap.size() + 1);
+        cout << "New bus " + to_string(stopsBusMap.size()) << endl; 
+    } else {
+        cout << "Already exists for " + stopsBusMap[stops] << endl;
     }
 }
 
