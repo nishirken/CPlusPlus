@@ -7,6 +7,16 @@
 // #include "print-vector.h"
 using namespace std;
 
+void PrintIntVector(const std::vector<int>& v) {
+    for (int i = 0; i < v.size(); i++) {
+        std::cout << v[i];
+        if (i != v.size() - 1) {
+            std::cout << ' ';
+        }
+    }
+    std::cout << std::endl;
+}
+
 vector<string> split(const string& str, const char& delim) {
     vector<string> acc;
     string temp;
@@ -22,38 +32,19 @@ vector<string> split(const string& str, const char& delim) {
     return acc;
 }
 
-map<set<string>, string> stopsBusMap;
-
-void executeCommand(string command) {
-    vector<string> input = split(command, ' ');
-    string busNumber = input[0];
-    set<string> stops = set<string>(input.begin() + 1, input.end());
-
-    if (!stopsBusMap.count(stops)) {
-        stopsBusMap[stops] = to_string(stopsBusMap.size() + 1);
-        cout << "New bus " + to_string(stopsBusMap.size()) << endl; 
-    } else {
-        cout << "Already exists for " + stopsBusMap[stops] << endl;
-    }
-}
-
 int main() {
-    int Q;
-    cin >> Q;
-    vector<string> commands(Q);
-    string s;
-    getline(cin, s);
-    if (Q == 0) {
-        return 0;
+    string input;
+    getline(cin, input);
+    vector<string> splitted = split(input, ' ');
+    vector<int> numbers;
+
+    for (auto const& x : splitted) {
+        numbers.push_back(stoi(x));
     }
 
-    for (string& c : commands) {
-        getline(cin, c);
-    }
+    sort(numbers.begin() + 1, numbers.end(), [](int i, int j) { return abs(i) < abs(j); });
 
-    for (auto command : commands) {
-        executeCommand(command);
-    }
+    PrintIntVector(vector<int>(numbers.begin() + 1, numbers.end()));
 
     return 0;
 }
