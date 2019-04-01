@@ -17,6 +17,16 @@ void PrintIntVector(const std::vector<int>& v) {
     std::cout << std::endl;
 }
 
+void PrintStringVector(const std::vector<std::string>& v) {
+    for (int i = 0; i < v.size(); i++) {
+        std::cout << v[i];
+        if (i != v.size() - 1) {
+            std::cout << ' ';
+        }
+    }
+    std::cout << std::endl;
+}
+
 vector<string> split(const string& str, const char& delim) {
     vector<string> acc;
     string temp;
@@ -32,19 +42,22 @@ vector<string> split(const string& str, const char& delim) {
     return acc;
 }
 
+string toLowerStr(const string& str) {
+    string temp;
+    for (auto const& c : str) {
+        temp.push_back(tolower(c));
+    }
+    return temp;
+}
+
 int main() {
     string input;
     getline(cin, input);
     vector<string> splitted = split(input, ' ');
-    vector<int> numbers;
 
-    for (auto const& x : splitted) {
-        numbers.push_back(stoi(x));
-    }
+    sort(splitted.begin() + 1, splitted.end(), [](string i, string j) { return toLowerStr(i) < toLowerStr(j); });
 
-    sort(numbers.begin() + 1, numbers.end(), [](int i, int j) { return abs(i) < abs(j); });
-
-    PrintIntVector(vector<int>(numbers.begin() + 1, numbers.end()));
+    PrintStringVector(vector<string>(splitted.begin() + 1, splitted.end()));
 
     return 0;
 }
