@@ -1,63 +1,70 @@
-#include <iostream>
-#include <string>
-#include <vector>
 #include <algorithm>
+#include <iostream>
 #include <map>
 #include <set>
+#include <string>
+#include <vector>
 // #include "print-vector.h"
 using namespace std;
 
-void PrintIntVector(const std::vector<int>& v) {
-    for (int i = 0; i < v.size(); i++) {
-        std::cout << v[i];
-        if (i != v.size() - 1) {
-            std::cout << ' ';
-        }
+class Person {
+  public:
+    void ChangeFirstName(int year, const string& first_name) {
+      storageFirstNames[year] = first_name;
     }
-    std::cout << std::endl;
-}
 
-void PrintStringVector(const std::vector<std::string>& v) {
-    for (int i = 0; i < v.size(); i++) {
-        std::cout << v[i];
-        if (i != v.size() - 1) {
-            std::cout << ' ';
-        }
+    void ChangeLastName(int year, const string& last_name) {
+      storageLastNames[year] = last_name;
     }
-    std::cout << std::endl;
-}
 
-vector<string> split(const string& str, const char& delim) {
-    vector<string> acc;
-    string temp;
-    for (const char& c : str) {
-        if (c == delim) {
-            acc.push_back(temp);
-            temp = "";
-            continue;
-        }
-        temp.push_back(c);
-    }
-    acc.push_back(temp);
-    return acc;
-}
+    string GetFullName(int year) {
+      string firstName = GetName(year, storageFirstNames);
+      string lastName = GetName(year, storageLastNames);
 
-string toLowerStr(const string& str) {
-    string temp;
-    for (auto const& c : str) {
-        temp.push_back(tolower(c));
+      if (firstName == "" && lastName == "") {
+        return "Incognito";
+      }
+
+      if (lastName == "") {
+        return firstName + " with unknown last name";
+      } else if (firstName == "") {
+        return lastName + " with unknown first name";
+      }
+      return firstName + " " + lastName;
     }
-    return temp;
-}
+
+  private:
+    map<int, string> storageFirstNames;
+    map<int, string> storageLastNames;
+
+    string GetName(int year, map<int, string> storage) {
+      for (int i = year; i != 0; i--) {
+        if (storage.count(i)) {
+          return storage[i];
+        }
+      }
+      return "";
+    }
+};
 
 int main() {
-    string input;
-    getline(cin, input);
-    vector<string> splitted = split(input, ' ');
+  Person person;
 
-    sort(splitted.begin() + 1, splitted.end(), [](string i, string j) { return toLowerStr(i) < toLowerStr(j); });
+  person.ChangeFirstName(1965, "Polina");
+  person.ChangeLastName(1967, "Sergeeva");
+  for (int year : {1900, 1965, 1990}) {
+    cout << person.GetFullName(year) << endl;
+  }
 
-    PrintStringVector(vector<string>(splitted.begin() + 1, splitted.end()));
+  person.ChangeFirstName(1970, "Appolinaria");
+  for (int year : {1969, 1970}) {
+    cout << person.GetFullName(year) << endl;
+  }
 
-    return 0;
+  person.ChangeLastName(1968, "Volkova");
+  for (int year : {1969, 1970}) {
+    cout << person.GetFullName(year) << endl;
+  }
+
+  return 0;
 }
