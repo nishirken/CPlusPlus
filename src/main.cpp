@@ -7,44 +7,89 @@
 // #include "print-vector.h"
 using namespace std;
 
-struct Specialization {
-  string value;
-  explicit Specialization(const string& newValue) {
-    value = newValue;
-  }
+// struct Image {
+//   double quality;
+//   double freshness;
+//   double rating;
+// };
+
+// struct Params {
+//   double a;
+//   double b;
+//   double c;
+// };
+
+class FunctionPart {
+  public:
+    FunctionPart(const char& newOperation, const double& newValue) {
+      operation = newOperation;
+      value = newValue;
+    }
+    double Apply(double sourceValue) const {
+      return operation == '-' ? (sourceValue - value) : (sourceValue + value);
+    }
+    void Invert() {
+      if (operation == '-') {
+        operation = '+';
+      } else {
+        operation = '-';
+      }
+    }
+  private:
+    char operation;
+    double value;
 };
 
-struct Course {
-  string value;
-  explicit Course(const string& newValue) {
-    value = newValue;
-  }
+class Function {
+  public:
+    void AddPart(const char& newOperation, const double newValue) {
+      parts.push_back({newOperation, newValue});
+    }
+    double Apply(double value) const {
+      for (auto const& f : parts) {
+        value = f.Apply(value);
+      }
+      return value;
+    }
+    void Invert() {
+      for (auto& f : parts) {
+        f.Invert();
+      }
+      reverse(parts.begin(), parts.end());
+    }
+  private:
+    vector<FunctionPart> parts;
 };
 
-struct Week {
-  string value;
-  explicit Week(const string& newValue) {
-    value = newValue;
-  }
-};
+// Function MakeWeightFunction(
+//   const Params& params,
+//   const Image& image
+// ) {
+//   Function function;
+//   function.AddPart('-', image.freshness * params.a + params.b);
+//   function.AddPart('+', image.rating * params.c);
+//   return function;
+// }
 
-struct LectureTitle {
-  string specialization;
-  string course;
-  string week;
+// double ComputeImageWeight(const Params& params, const Image& image) {
+//   Function function = MakeWeightFunction(params, image);
+//   return function.Apply(image.quality);
+// }
 
-  explicit LectureTitle(const Specialization& spec, const Course& c, const Week& w) {
-    specialization = spec.value;
-    course = c.value;
-    week = w.value;
-  }
-};
+// double ComputeQualityByWeight(
+//   const Params& params,
+//   const Image& image,
+//   double weight
+// ) {
+//   Function function = MakeWeightFunction(params, image);
+//   function.Invert();
+//   return function.Apply(weight);
+// }
 
 int main() {
-  LectureTitle title(
-    Specialization("C++"),
-    Course("White belt"),
-    Week("4th")
-  );
+  // Image image = {10, 2, 6};
+  // Params params = {4, 2, 6};
+  // cout << ComputeImageWeight(params, image) << endl;
+  // cout << ComputeQualityByWeight(params, image, 46) << endl;
   return 0;
 }
