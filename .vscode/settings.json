@@ -10,6 +10,7 @@
     "set": "cpp",
     "fstream": "cpp",
     "system_error": "cpp",
-    "iomanip": "cpp"
+    "iomanip": "cpp",
+    "vector": "cpp"
   }
 }
