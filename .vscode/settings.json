@@ -7,6 +7,9 @@
     "iosfwd": "cpp",
     "map": "cpp",
     "iostream": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "fstream": "cpp",
+    "system_error": "cpp",
+    "iomanip": "cpp"
   }
 }
