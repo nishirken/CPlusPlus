@@ -67,7 +67,9 @@ ostream& operator<<(ostream& stream, const Rational& x) {
 
 istream& operator>>(istream& stream, Rational& x) {
     string temp;
-    cin >> temp;
+    if (!(stream >> temp)) {
+        return stream;
+    }
     vector<string> splitted = split(temp, '/');
     x = Rational(stoi(splitted[0]), stoi(splitted[1]));
     return stream;
