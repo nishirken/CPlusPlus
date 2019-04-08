@@ -1,4 +1,7 @@
 #include <iostream>
+#include <map>
+#include <set>
+#include <vector>
 using namespace std;
 
 int gcd(long a, long b) { 
@@ -6,6 +9,10 @@ int gcd(long a, long b) {
       return a; 
    return gcd(b, a % b);  
 }
+
+int lcm(long a, long b) {
+    return (a * b) / gcd(a, b); 
+} 
 
 class Rational {
     public:
@@ -44,59 +51,47 @@ class Rational {
         int denominator = 1;
 };
 
+bool operator<(const Rational& x, const Rational& y) {
+  const int lcDenom = lcm(x.Denominator(), y.Denominator());
+  return (x.Numerator() * (lcDenom / x.Denominator())) < (y.Numerator() * (lcDenom / y.Denominator()));
+}
+
+bool operator>(const Rational& x, const Rational& y) {
+  const int lcDenom = lcm(x.Denominator(), y.Denominator());
+  return (x.Numerator() * (lcDenom / x.Denominator())) > (y.Numerator() * (lcDenom / y.Denominator()));
+}
+
 bool operator==(const Rational& x, const Rational& y) {
   return x.Numerator() == y.Numerator() && x.Denominator() == y.Denominator();
 }
 
-Rational operator+(const Rational& x, const Rational& y) {
-  if (x.Denominator() == y.Denominator()) {
-    return Rational(x.Numerator() + y.Numerator(), x.Denominator());
-  }
-  return Rational(
-    x.Numerator() * y.Denominator() + y.Numerator() * x.Denominator(),
-    x.Denominator() * y.Denominator()
-  );
-}
-
-Rational operator-(const Rational& x, const Rational& y) {
-  if (x.Denominator() == y.Denominator()) {
-    return Rational(x.Numerator() - y.Numerator(), x.Denominator());
-  }
-  return Rational(
-    x.Numerator() * y.Denominator() - y.Numerator() * x.Denominator(),
-    x.Denominator() * y.Denominator()
-  );
-}
-
 int main() {
     {
-        Rational r1(4, 6);
-        Rational r2(2, 3);
-        bool equal = r1 == r2;
-        if (!equal) {
-            cout << "4/6 != 2/3" << endl;
+        const set<Rational> rs = {{1, 2}, {1, 25}, {3, 4}, {3, 4}, {1, 2}};
+        if (rs.size() != 3) {
+            cout << "Wrong amount of items in the set" << endl;
             return 1;
         }
-    }
 
-    {
-        Rational a(2, 3);
-        Rational b(4, 3);
-        Rational c = a + b;
-        bool equal = c == Rational(2, 1);
-        if (!equal) {
-            cout << "2/3 + 4/3 != 2" << endl;
+        vector<Rational> v;
+        for (auto x : rs) {
+            v.push_back(x);
+        }
+        if (v != vector<Rational>{{1, 25}, {1, 2}, {3, 4}}) {
+            cout << "Rationals comparison works incorrectly" << endl;
             return 2;
         }
     }
 
     {
-        Rational a(5, 7);
-        Rational b(2, 9);
-        Rational c = a - b;
-        bool equal = c == Rational(31, 63);
-        if (!equal) {
-            cout << "5/7 - 2/9 != 31/63" << endl;
+        map<Rational, int> count;
+        ++count[{1, 2}];
+        ++count[{1, 2}];
+
+        ++count[{2, 3}];
+
+        if (count.size() != 2) {
+            cout << "Wrong amount of items in the map" << endl;
             return 3;
         }
     }

@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-int gcd(int a, int b) { 
+int gcd(long a, long b) { 
    if (b == 0) 
       return a; 
    return gcd(b, a % b);  
@@ -9,19 +9,27 @@ int gcd(int a, int b) {
 
 class Rational {
     public:
-        Rational() {}
-        Rational(int newNumerator, int newDenominator) {
-            if ((numerator / denominator) < 0) {
-                numerator = -abs(numerator);
-                denominator = abs(denominator);
-            }
-            if (numerator == 0) {
+        Rational() {
+            numerator = 0;
+            denominator = 1;
+        }
+        Rational(long newNumerator, long newDenominator) {
+            if (newNumerator == 0) {
+                numerator = 0;
                 denominator = 1;
+                return;
             }
 
-            int greatestDenom = gcd(newNumerator, newDenominator);
+            int greatestDenom = gcd(abs(newNumerator), abs(newDenominator));
             numerator = newNumerator / greatestDenom;
             denominator = newDenominator / greatestDenom;
+
+            if ((numerator < 0 && denominator > 0) || (numerator > 0 && denominator < 0)) {
+                numerator = -abs(numerator);
+            } else {
+                numerator = abs(numerator);
+            }
+            denominator = abs(denominator);
         }
 
         int Numerator() const {

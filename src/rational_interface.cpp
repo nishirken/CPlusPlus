@@ -12,19 +12,27 @@ int gcd(long a, long b) {
 
 class Rational {
     public:
-        Rational() {}
+        Rational() {
+            numerator = 0;
+            denominator = 1;
+        }
         Rational(long newNumerator, long newDenominator) {
+            if (newNumerator == 0) {
+                numerator = 0;
+                denominator = 1;
+                return;
+            }
+
             int greatestDenom = gcd(abs(newNumerator), abs(newDenominator));
             numerator = newNumerator / greatestDenom;
             denominator = newDenominator / greatestDenom;
 
-            if ((numerator / denominator) < 0) {
+            if ((numerator < 0 && denominator > 0) || (numerator > 0 && denominator < 0)) {
                 numerator = -abs(numerator);
-                denominator = abs(denominator);
+            } else {
+                numerator = abs(numerator);
             }
-            if (numerator == 0) {
-                denominator = 1;
-            }
+            denominator = abs(denominator);
         }
 
         int Numerator() const {
